@@ -1,0 +1,98 @@
+.wrapper {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1000px;
+    z-index: 10;
+    font-family: 'DotGothic16', sans-serif;
+}
+
+.dialogContainer {
+    position: relative;
+    /* Light Theme: Cream color */
+    background: rgba(253, 246, 227, 0.95);
+    border-radius: 8px;
+    border: 2px solid #dcd3b6;
+    backdrop-filter: blur(4px);
+    padding: 30px 60px;
+    min-height: 160px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Accent line at top */
+.dialogContainer::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 98%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(160, 120, 90, 0.3), transparent);
+}
+
+.nameTag {
+    position: absolute;
+    top: -24px;
+    left: 30px;
+    /* Aligned Left */
+    transform: none;
+    /* Dark brown background for contrast with cream box */
+    background-color: #5c4d3c;
+    color: #f0e6d2;
+    padding: 4px 30px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 20;
+    border: 2px solid #f0e6d2;
+}
+
+.textBox {
+    width: 100%;
+    height: 100%;
+}
+
+.text {
+    margin: 0;
+    color: #4a3b2a;
+    /* Dark brown text */
+    font-size: 1.35rem;
+    line-height: 1.6;
+    /* No significant shadow for light theme */
+}
+
+/* Bouncing Down Arrow */
+.nextCursor {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    /* Moved to right as requested? User: "right-bottom has triangle" */
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 15px solid #c7a060;
+    /* Down pointing triangle */
+    animation: bounce 1s infinite ease-in-out;
+}
+
+.triangle {
+    /* removed nested triangle logic, using nextCursor itself or just cleaner class */
+    display: none;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(5px);
+    }
+}

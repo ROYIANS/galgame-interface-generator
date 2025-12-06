@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
+
+:root {
+  --color-term-bg: #1a1a1a;
+  --color-term-text: #e0e0e0;
+  --color-primary: #ff00ff; /* Magenta for that retro vibe */
+  --color-secondary: #00ffff; /* Cyan */
+  --crt-flicker-opacity: 0.05;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #000;
+  color: var(--color-term-text);
+  font-family: 'DotGothic16', sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* CRT Screen Effect */
+.crt-container {
+  position: relative;
+  overflow: hidden;
+  /* subtle visual curve could be added here with box-shadow if desired */
+}
+
+.crt-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.25) 50%
+  );
+  background-size: 100% 4px; /* Scanline size */
+  animation: scanlines 0.2s linear infinite;
+  box-shadow: inset 0 0 100px rgba(0,0,0,0.9);
+}
+
+.crt-overlay::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(18, 16, 16, 0.1);
+  opacity: 0;
+  z-index: 2;
+  animation: flicker 0.15s infinite;
+}
+
+@keyframes scanlines {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 4px; }
+}
+
+@keyframes flicker {
+  0% { opacity: 0.02; }
+  50% { opacity: 0.05; }
+  100% { opacity: 0.02; }
+}
+
+/* Text glow effect */
+.text-glow {
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #000; 
+}
+::-webkit-scrollbar-thumb {
+  background: #444; 
+  border: 1px solid #fff;
+}

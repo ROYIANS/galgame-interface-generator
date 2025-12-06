@@ -1,0 +1,71 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1300;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'DotGothic16', sans-serif;
+}
+
+.container {
+    background: rgba(253, 246, 227, 0.98);
+    width: 90%;
+    max-width: 800px;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border: 4px solid #5c4d3c;
+    box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+}
+
+.cropContainer {
+    position: relative;
+    flex: 1;
+    background: #333;
+    margin-bottom: 20px;
+    border: 2px solid #a08c70;
+}
+
+.controls {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.slider {
+    flex: 1;
+    accent-color: #5c4d3c;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    font-weight: bold;
+    font-family: inherit;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.saveBtn {
+    background: #5c4d3c;
+    /* Brown */
+    color: #f0e6d2;
+}
+
+.cancelBtn {
+    background: #a08c70;
+    /* Light Brown */
+    color: #fff;
+}
