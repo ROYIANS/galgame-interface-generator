@@ -50,19 +50,6 @@ const GalgameScreen = forwardRef(({
                 } : {}}
             />
 
-            {/* GIF支持：使用img元素覆盖层 */}
-            {backgroundImage && (
-                <img
-                    src={backgroundImage}
-                    alt="Background"
-                    className={styles.backgroundImage}
-                    style={{
-                        transform: `translate(${parallaxX}px, ${parallaxY}px) scale(1.05)`,
-                        transition: 'transform 0.3s ease-out'
-                    }}
-                />
-            )}
-
             <DialogBox
                 name={name}
                 text={text}

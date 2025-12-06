@@ -85,7 +85,7 @@ const Controls = ({
                     onChange={onImageUpload}
                     className={styles.fileInput}
                 />
-                <small className={styles.helpText}>支持GIF动图。图片仅保存在浏览器本地。</small>
+                <small className={styles.helpText}>图片仅保存在浏览器本地。</small>
             </div>
         </div>
     );
