@@ -30,18 +30,20 @@ const DialogBox = ({
                     </div>
                 )}
 
-                {/* Action Bar on the right */}
-                <ActionBar
-                    onConfig={onConfig}
-                    onEdit={onEdit}
-                    onCapture={onCapture}
-                    onReplay={onReplay}
-                    onToggleCRT={onToggleCRT}
-                    onShowLog={onShowLog}
-                    onLoadImage={onLoadImage}
-                    onToggleMute={onToggleMute}
-                    isMuted={isMuted}
-                />
+                {/* Action Bar on the right - PC端显示 */}
+                <div className="desktop-action-bar">
+                    <ActionBar
+                        onConfig={onConfig}
+                        onEdit={onEdit}
+                        onCapture={onCapture}
+                        onReplay={onReplay}
+                        onToggleCRT={onToggleCRT}
+                        onShowLog={onShowLog}
+                        onLoadImage={onLoadImage}
+                        onToggleMute={onToggleMute}
+                        isMuted={isMuted}
+                    />
+                </div>
 
                 <div className={styles.textBox}>
                     <p className={styles.text}>{displayedText}</p>

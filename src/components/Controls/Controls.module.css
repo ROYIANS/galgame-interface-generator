@@ -90,3 +90,35 @@ button:active {
     cursor: not-allowed;
     filter: grayscale(100%);
 }
+
+.privacyNotice {
+    background: #e8f4f8;
+    border: 2px solid #4a90a4;
+    border-radius: 6px;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.privacyNotice svg {
+    color: #2c5f6f;
+    flex-shrink: 0;
+}
+
+.privacyNotice p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #2c5f6f;
+    font-weight: bold;
+}
+
+.helpText {
+    font-size: 0.75rem;
+    color: #7a6a4f;
+    font-style: italic;
+    margin-top: 5px;
+    display: block;
+}

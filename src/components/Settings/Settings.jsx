@@ -1,5 +1,5 @@
 import React from 'react';
-import { Settings as SettingsIcon } from 'lucide-react';
+import { Settings as SettingsIcon, Lock } from 'lucide-react';
 import styles from './Settings.module.css';
 
 const Settings = ({
@@ -24,6 +24,12 @@ const Settings = ({
                 <div className={styles.header}>
                     <SettingsIcon size={24} className={styles.icon} />
                     <h2>Configuration</h2>
+                </div>
+
+                {/* 隐私提示 */}
+                <div className={styles.privacyNotice}>
+                    <Lock size={14} />
+                    <p>API配置保存在浏览器本地（localStorage），不会上传到服务器</p>
                 </div>
 
                 <div className={styles.field}>

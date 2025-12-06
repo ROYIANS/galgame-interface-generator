@@ -54,6 +54,28 @@
     transform: scale(1.1);
 }
 
+.privacyNotice {
+    background: #e8f4f8;
+    border-bottom: 2px solid #4a90a4;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.privacyNotice svg {
+    color: #2c5f6f;
+    flex-shrink: 0;
+}
+
+.privacyNotice p {
+    margin: 0;
+    font-size: 0.75rem;
+    color: #2c5f6f;
+    font-weight: bold;
+}
+
 .content {
     padding: 20px;
     overflow-y: auto;

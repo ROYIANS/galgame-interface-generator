@@ -81,9 +81,31 @@ body {
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #000; 
+  background: #000;
 }
 ::-webkit-scrollbar-thumb {
-  background: #444; 
+  background: #444;
   border: 1px solid #fff;
+}
+
+/* Mobile ActionBar - 仅移动端显示 */
+.mobile-action-bar {
+  display: none;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 999;
+}
+
+@media (max-width: 768px) {
+  .mobile-action-bar {
+    display: block;
+  }
+}
+
+/* Desktop ActionBar - 仅PC端显示（在DialogBox内） */
+@media (max-width: 768px) {
+  .desktop-action-bar {
+    display: none !important;
+  }
 }

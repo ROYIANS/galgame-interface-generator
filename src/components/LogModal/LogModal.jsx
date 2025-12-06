@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Download, Trash2 } from 'lucide-react';
+import { X, Download, Trash2, Lock } from 'lucide-react';
 import styles from './LogModal.module.css';
 
 const LogModal = ({ isOpen, onClose, screenshots, onDelete }) => {
@@ -13,6 +13,12 @@ const LogModal = ({ isOpen, onClose, screenshots, onDelete }) => {
                     <button className={styles.closeBtn} onClick={onClose}>
                         <X size={24} />
                     </button>
+                </div>
+
+                {/* 隐私提示 */}
+                <div className={styles.privacyNotice}>
+                    <Lock size={14} />
+                    <p>截图保存在浏览器本地（localStorage），不会上传到服务器</p>
                 </div>
 
                 <div className={styles.content}>

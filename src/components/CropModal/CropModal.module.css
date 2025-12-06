@@ -69,3 +69,19 @@ button {
     /* Light Brown */
     color: #fff;
 }
+
+.gifNotice {
+    background: #fff3cd;
+    border: 2px solid #ffc107;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 15px;
+    color: #856404;
+    text-align: center;
+}
+
+.gifNotice p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: bold;
+}

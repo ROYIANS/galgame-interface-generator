@@ -4,6 +4,7 @@ import Controls from './components/Controls/Controls';
 import Settings from './components/Settings/Settings';
 import CropModal from './components/CropModal/CropModal';
 import LogModal from './components/LogModal/LogModal';
+import ActionBar from './components/ActionBar/ActionBar';
 import { useAI } from './hooks/useAI';
 import { useBackgroundMusic } from './hooks/useBackgroundMusic';
 import html2canvas from 'html2canvas';
@@ -245,7 +246,33 @@ function App() {
       position: 'relative'
     }}>
 
-      {/* Global CRT Overlay - NOT included in screenshot */}
+      {/* Global CRT Overlay - 覆盖整个屏幕，包括移动端ActionBar */}
+      {showCRT && (
+        <div className="crt-overlay" style={{
+          pointerEvents: 'none',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 99999
+        }}></div>
+      )}
+
+      {/* Mobile-only ActionBar - 固定在屏幕右上角 */}
+      <div className="mobile-action-bar">
+        <ActionBar
+          onConfig={() => setShowSettings(true)}
+          onEdit={() => setShowControls(true)}
+          onCapture={handleSave}
+          onReplay={handleReplay}
+          onToggleCRT={handleToggleCRT}
+          onShowLog={() => setShowLog(true)}
+          onLoadImage={handleLoadImageFromButton}
+          onToggleMute={toggleMute}
+          isMuted={isMuted}
+        />
+      </div>
 
       {/* Flash Overlay */}
       <div style={{

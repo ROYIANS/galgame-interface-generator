@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Palette } from 'lucide-react';
+import { Sparkles, Palette, Lock } from 'lucide-react';
 import styles from './Controls.module.css';
 
 const Controls = ({
@@ -16,6 +16,11 @@ const Controls = ({
 }) => {
     return (
         <div className={styles.controlsContainer}>
+            {/* 隐私提示 */}
+            <div className={styles.privacyNotice}>
+                <Lock size={16} />
+                <p>所有数据保存在浏览器本地，不会上传到服务器</p>
+            </div>
             <div className={styles.row}>
                 <div className={styles.inputGroup}>
                     <label>Character Name</label>
@@ -80,6 +85,7 @@ const Controls = ({
                     onChange={onImageUpload}
                     className={styles.fileInput}
                 />
+                <small className={styles.helpText}>支持GIF动图。图片仅保存在浏览器本地。</small>
             </div>
         </div>
     );

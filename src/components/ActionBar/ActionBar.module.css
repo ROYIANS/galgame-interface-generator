@@ -13,14 +13,17 @@
     border: 2px solid #f0e6d2;
 }
 
+/* 移动端：竖排布局，米黄色背景（应用到mobile-action-bar中的ActionBar） */
 @media (max-width: 768px) {
     .actionBar {
-        top: -18px;
-        right: 15px;
-        gap: 4px;
-        padding: 3px 8px;
-        flex-wrap: wrap;
-        max-width: 50%;
+        position: static; /* 由父容器.mobile-action-bar控制定位 */
+        flex-direction: column;
+        gap: 6px;
+        padding: 8px 6px;
+        border-radius: 12px;
+        background-color: #f0e6d2; /* 米黄色 */
+        border: 2px solid #5c4d3c;
+        max-width: none;
     }
 }
 
@@ -42,10 +45,14 @@
     overflow: hidden;
 }
 
+/* 移动端：默认显示文字，深色文字 */
 @media (max-width: 768px) {
     .actionBtn {
-        padding: 3px 5px;
-        gap: 3px;
+        padding: 6px 8px;
+        gap: 6px;
+        color: #4a3b2a; /* 深褐色文字 */
+        width: 100%;
+        justify-content: flex-start;
     }
 }
 
@@ -53,6 +60,13 @@
     opacity: 1;
     background: rgba(240, 230, 210, 0.15);
     transform: scale(1.05);
+}
+
+/* 移动端hover效果 */
+@media (max-width: 768px) {
+    .actionBtn:hover {
+        background: rgba(92, 77, 60, 0.1); /* 深褐色半透明 */
+    }
 }
 
 .icon {
@@ -80,9 +94,13 @@
     transition: all 0.3s ease;
 }
 
+/* 移动端：默认显示文字 */
 @media (max-width: 768px) {
     .label {
-        font-size: 0.6rem;
+        font-size: 0.65rem;
+        max-width: 100px; /* 默认展开 */
+        opacity: 1; /* 默认显示 */
+        margin-left: 0;
     }
 }
 
@@ -92,9 +110,10 @@
     margin-left: 4px;
 }
 
+/* 移动端不需要hover才显示 */
 @media (max-width: 768px) {
     .actionBtn:hover .label {
-        max-width: 60px;
+        margin-left: 0;
     }
 }
 
@@ -105,9 +124,12 @@
     margin: 0 4px;
 }
 
+/* 移动端：横向分隔线 */
 @media (max-width: 768px) {
     .divider {
-        height: 18px;
-        margin: 0 2px;
+        width: 100%;
+        height: 1px;
+        background-color: rgba(92, 77, 60, 0.3); /* 深褐色分隔线 */
+        margin: 4px 0;
     }
 }

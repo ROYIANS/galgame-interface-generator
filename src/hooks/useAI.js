@@ -91,16 +91,26 @@ Output ONLY the dialogue text, nothing else.`;
         try {
             const client = getClient(config);
 
-            // Enhanced prompt for pure background without text or UI elements
-            const enhancedPrompt = `Create a pixel art style background scene for a visual novel game based on this description: "${prompt}".
+            // 梦核/Dreamcore风格的增强prompt
+            const enhancedPrompt = `Create a dreamcore/weirdcore style pixel art visual novel CG scene based on: "${prompt}".
 
-            Requirements:
-            - Pure background scenery only (landscape, interior, or environment)
-            - Pixel art or retro game aesthetic
-            - Anime/Japanese visual novel style
-            - NO text, NO dialogue boxes, NO UI elements, NO characters with speech bubbles
-            - Focus on atmospheric scenery that matches the mood of: ${prompt}
-            - Suitable as a background for dialogue overlay`;
+Style Requirements:
+- **Dreamcore/Weirdcore aesthetic**: Surreal, nostalgic, liminal, ethereal, slightly unsettling yet familiar
+- **Pixel art**: 16-bit or 32-bit retro JRPG style with soft pastel colors (lavender, mint, baby blue, faded magenta)
+- **Atmosphere**: Dream-like, psychedelic, liminal space feel with vaporwave undertones
+- **Elements can include**:
+  * Characters in pixel art anime style (if relevant to the prompt)
+  * Surreal environments (floating objects, impossible architecture, distorted perspectives)
+  * Nostalgic/uncanny objects (old TVs with static, oversized plushies, melting textures, anthropomorphic clouds)
+  * Dreamlike lighting (soft, diffused, eternal afternoon glow with CRT scanline effects)
+  * Liminal spaces (empty playgrounds, endless forests, glitchy patterns)
+
+Forbidden:
+- NO text overlays, NO dialogue boxes, NO UI elements
+- NO photo-realistic style
+
+Based on user input: "${prompt}"
+Create a pixel art CG that captures the dreamcore mood and incorporates relevant visual elements.`;
 
             const imageModel = config.imageModel || "dall-e-3";
 

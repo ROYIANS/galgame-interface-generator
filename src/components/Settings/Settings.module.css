@@ -94,3 +94,27 @@ button {
 button:hover {
     background: #4a3b2a;
 }
+
+.privacyNotice {
+    background: #e8f4f8;
+    border: 2px solid #4a90a4;
+    border-radius: 6px;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.privacyNotice svg {
+    color: #2c5f6f;
+    flex-shrink: 0;
+}
+
+.privacyNotice p {
+    margin: 0;
+    font-size: 0.75rem;
+    color: #2c5f6f;
+    font-weight: bold;
+}
