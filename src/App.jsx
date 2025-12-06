@@ -246,19 +246,6 @@ function App() {
       position: 'relative'
     }}>
 
-      {/* Global CRT Overlay - 覆盖整个屏幕，包括移动端ActionBar */}
-      {showCRT && (
-        <div className="crt-overlay" style={{
-          pointerEvents: 'none',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: 99999
-        }}></div>
-      )}
-
       {/* Mobile-only ActionBar - 固定在屏幕右上角 */}
       <div className="mobile-action-bar">
         <ActionBar
@@ -299,6 +286,11 @@ function App() {
           justifyContent: 'center',
           alignItems: 'center'
         }}>
+        {/* CRT Overlay inside screenshot area - 会被截图捕获 */}
+        {showCRT && (
+          <div className="crt-overlay" style={{ pointerEvents: 'none', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 999 }}></div>
+        )}
+
         <GalgameScreen
           name={name}
           text={text}
