@@ -37,8 +37,8 @@ function App() {
   const screenRef = useRef(null);
   const { generateText, generateImage, loading, error } = useAI();
 
-  // Background music
-  const { isMuted, toggleMute } = useBackgroundMusic('/src/assets/bgm.mp3');
+  // Background music - 使用 public 目录下的文件
+  const { isMuted, toggleMute } = useBackgroundMusic('/bgm.mp3');
 
   // Flash effect state
   const [flash, setFlash] = useState(false);
