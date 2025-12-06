@@ -14,7 +14,9 @@ const DialogBox = ({
     onReplay,
     onToggleCRT,
     onShowLog,
-    onLoadImage
+    onLoadImage,
+    onToggleMute,
+    isMuted
 }) => {
     const displayedText = useTypewriter(text, typewriterSpeed, replayCounter);
 
@@ -37,6 +39,8 @@ const DialogBox = ({
                     onToggleCRT={onToggleCRT}
                     onShowLog={onShowLog}
                     onLoadImage={onLoadImage}
+                    onToggleMute={onToggleMute}
+                    isMuted={isMuted}
                 />
 
                 <div className={styles.textBox}>

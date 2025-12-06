@@ -14,7 +14,9 @@ const GalgameScreen = forwardRef(({
     onReplay,
     onToggleCRT,
     onShowLog,
-    onLoadImage
+    onLoadImage,
+    onToggleMute,
+    isMuted
 }, ref) => {
     return (
         <div className={styles.screenWrapper} ref={ref}>
@@ -35,6 +37,8 @@ const GalgameScreen = forwardRef(({
                 onToggleCRT={onToggleCRT}
                 onShowLog={onShowLog}
                 onLoadImage={onLoadImage}
+                onToggleMute={onToggleMute}
+                isMuted={isMuted}
             />
         </div>
     );

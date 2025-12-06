@@ -5,6 +5,7 @@ import Settings from './components/Settings/Settings';
 import CropModal from './components/CropModal/CropModal';
 import LogModal from './components/LogModal/LogModal';
 import { useAI } from './hooks/useAI';
+import { useBackgroundMusic } from './hooks/useBackgroundMusic';
 import html2canvas from 'html2canvas';
 
 function App() {
@@ -35,6 +36,9 @@ function App() {
 
   const screenRef = useRef(null);
   const { generateText, generateImage, loading, error } = useAI();
+
+  // Background music
+  const { isMuted, toggleMute } = useBackgroundMusic('/src/assets/bgm.mp3');
 
   // Flash effect state
   const [flash, setFlash] = useState(false);
@@ -90,21 +94,85 @@ function App() {
     if (!AudioContext) return;
 
     const ctx = new AudioContext();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
 
-    osc.connect(gain);
-    gain.connect(ctx.destination);
+    // 模拟相机快门的多层声音效果
+    // 第一部分：快门开启的"咔"声（高频噪音）
+    const createNoiseBuffer = (duration) => {
+      const bufferSize = ctx.sampleRate * duration;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+      return buffer;
+    };
 
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(1200, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.1);
+    // 噪音1：快门打开（短促高频）
+    const noise1 = ctx.createBufferSource();
+    noise1.buffer = createNoiseBuffer(0.02);
+    const noiseFilter1 = ctx.createBiquadFilter();
+    noiseFilter1.type = 'highpass';
+    noiseFilter1.frequency.setValueAtTime(2000, ctx.currentTime);
+    const noiseGain1 = ctx.createGain();
+    noiseGain1.gain.setValueAtTime(0.3, ctx.currentTime);
+    noiseGain1.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.02);
 
-    gain.gain.setValueAtTime(0.5, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+    noise1.connect(noiseFilter1);
+    noiseFilter1.connect(noiseGain1);
+    noiseGain1.connect(ctx.destination);
 
-    osc.start();
-    osc.stop(ctx.currentTime + 0.15);
+    // 第二部分：机械"咔嚓"声（中频脉冲）
+    const clickOsc = ctx.createOscillator();
+    const clickGain = ctx.createGain();
+    clickOsc.type = 'square';
+    clickOsc.frequency.setValueAtTime(150, ctx.currentTime + 0.02);
+    clickGain.gain.setValueAtTime(0, ctx.currentTime + 0.02);
+    clickGain.gain.linearRampToValueAtTime(0.4, ctx.currentTime + 0.03);
+    clickGain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+
+    clickOsc.connect(clickGain);
+    clickGain.connect(ctx.destination);
+
+    // 噪音2：快门关闭（更短的噪音）
+    const noise2 = ctx.createBufferSource();
+    noise2.buffer = createNoiseBuffer(0.015);
+    const noiseFilter2 = ctx.createBiquadFilter();
+    noiseFilter2.type = 'highpass';
+    noiseFilter2.frequency.setValueAtTime(2500, ctx.currentTime + 0.08);
+    const noiseGain2 = ctx.createGain();
+    noiseGain2.gain.setValueAtTime(0.25, ctx.currentTime + 0.08);
+    noiseGain2.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.095);
+
+    noise2.connect(noiseFilter2);
+    noiseFilter2.connect(noiseGain2);
+    noiseGain2.connect(ctx.destination);
+
+    // 第三部分：机械回弹的低频"咚"声
+    const thumpOsc = ctx.createOscillator();
+    const thumpGain = ctx.createGain();
+    thumpOsc.type = 'sine';
+    thumpOsc.frequency.setValueAtTime(80, ctx.currentTime + 0.1);
+    thumpOsc.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + 0.2);
+    thumpGain.gain.setValueAtTime(0, ctx.currentTime + 0.1);
+    thumpGain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.11);
+    thumpGain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+
+    thumpOsc.connect(thumpGain);
+    thumpGain.connect(ctx.destination);
+
+    // 播放所有音效
+    const now = ctx.currentTime;
+    noise1.start(now);
+    noise1.stop(now + 0.02);
+
+    clickOsc.start(now + 0.02);
+    clickOsc.stop(now + 0.08);
+
+    noise2.start(now + 0.08);
+    noise2.stop(now + 0.095);
+
+    thumpOsc.start(now + 0.1);
+    thumpOsc.stop(now + 0.25);
   };
 
   const handleSave = async () => {
@@ -222,6 +290,8 @@ function App() {
           onToggleCRT={handleToggleCRT}
           onShowLog={() => setShowLog(true)}
           onLoadImage={handleLoadImageFromButton}
+          onToggleMute={toggleMute}
+          isMuted={isMuted}
         />
       </div>
 

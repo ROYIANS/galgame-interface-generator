@@ -6,12 +6,16 @@ import {
     FolderOpen,
     Save,
     Settings,
-    Edit
+    Edit,
+    Volume2,
+    VolumeX
 } from 'lucide-react';
+import { useUISound } from '../../hooks/useUISound';
 import styles from './ActionBar.module.css';
 
-const ActionBar = ({ onConfig, onEdit, onCapture, onReplay, onToggleCRT, onShowLog, onLoadImage }) => {
+const ActionBar = ({ onConfig, onEdit, onCapture, onReplay, onToggleCRT, onShowLog, onLoadImage, onToggleMute, isMuted }) => {
     const iconSize = 18;
+    const { playHoverSound } = useUISound();
 
     const actions = [
         { label: 'AUTO', icon: <Play size={iconSize} />, onClick: onReplay, title: 'Replay typewriter effect' },
@@ -29,6 +33,7 @@ const ActionBar = ({ onConfig, onEdit, onCapture, onReplay, onToggleCRT, onShowL
                     key={action.label}
                     className={styles.actionBtn}
                     onClick={action.onClick}
+                    onMouseEnter={playHoverSound}
                     title={action.title}
                 >
                     <span className={styles.icon}>{action.icon}</span>
@@ -39,14 +44,36 @@ const ActionBar = ({ onConfig, onEdit, onCapture, onReplay, onToggleCRT, onShowL
             <div className={styles.divider}></div>
 
             {/* System controls */}
-            <button className={styles.actionBtn} onClick={onEdit} title="Edit content">
+            <button
+                className={styles.actionBtn}
+                onClick={onEdit}
+                onMouseEnter={playHoverSound}
+                title="Edit content"
+            >
                 <span className={styles.icon}><Edit size={iconSize} /></span>
                 <span className={styles.label}>EDIT</span>
             </button>
 
-            <button className={styles.actionBtn} onClick={onConfig} title="Configure AI settings">
+            <button
+                className={styles.actionBtn}
+                onClick={onConfig}
+                onMouseEnter={playHoverSound}
+                title="Configure AI settings"
+            >
                 <span className={styles.icon}><Settings size={iconSize} /></span>
                 <span className={styles.label}>CONFIG</span>
+            </button>
+
+            <button
+                className={styles.actionBtn}
+                onClick={onToggleMute}
+                onMouseEnter={playHoverSound}
+                title={isMuted ? "Unmute background music" : "Mute background music"}
+            >
+                <span className={styles.icon}>
+                    {isMuted ? <VolumeX size={iconSize} /> : <Volume2 size={iconSize} />}
+                </span>
+                <span className={styles.label}>{isMuted ? 'UNMUTE' : 'MUTE'}</span>
             </button>
         </div>
     );
