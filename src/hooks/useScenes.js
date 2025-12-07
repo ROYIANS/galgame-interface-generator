@@ -17,7 +17,7 @@ export const useScenes = () => {
         {
           id: `scene_${Date.now()}`,
           order: 0,
-          character: '主角',
+          character: '？？？',
           text: '在期待某件事情的发生吗？',
           background: null,
           inheritCharacter: false,

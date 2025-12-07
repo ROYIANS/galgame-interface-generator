@@ -503,76 +503,38 @@ function App() {
       </div>
 
       {/* Editor Modal (Controls) */}
-      {showControls && (
-        <div style={{
-          position: 'fixed',
-          top: 0, left: 0, width: '100%', height: '100%',
-          background: 'rgba(0,0,0,0.4)',
-          zIndex: 1100,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '20px'
-        }}>
-          <div style={{
-            position: 'relative',
-            width: '90%',
-            maxWidth: '800px',
-            maxHeight: '90vh',
-            overflow: 'hidden',
-            display: 'flex',
-            flexDirection: 'column'
-          }}>
-            <button
-              onClick={() => setShowControls(false)}
-              style={{
-                position: 'absolute',
-                top: '-15px',
-                right: '-10px',
-                background: '#e74c3c',
-                color: 'white',
-                border: '2px solid #fff',
-                zIndex: 201,
-                cursor: 'pointer',
-                padding: '5px 10px',
-                borderRadius: '50%'
-              }}
-            >
-              ✕
-            </button>
-            <Controls
-              name={currentScene?.inheritCharacter ? '' : (currentScene?.character || '主角')}
-              setName={handleNameChange}
-              text={currentScene?.inheritText ? '' : (currentScene?.text || '')}
-              setText={handleTextChange}
-              typewriterSpeed={typewriterSpeed}
-              setTypewriterSpeed={setTypewriterSpeed}
-              onImageUpload={handleImageUpload}
-              onClearBackground={handleClearBackground}
-              isGenerating={loading}
-              onAiText={handleAiText}
-              onAiImage={handleAiImage}
-              characters={getSortedCharacters()}
-              onSaveCharacter={handleSaveCharacter}
-              onSelectCharacter={handleSelectCharacter}
-              onDeleteCharacter={handleDeleteCharacter}
-              mode={mode}
-              scenes={scenes}
-              currentSceneIndex={currentSceneIndex}
-              onModeToggle={handleModeToggle}
-              onSelectScene={setCurrentSceneIndex}
-              onAddScene={addScene}
-              onDeleteScene={deleteScene}
-              onMoveScene={moveScene}
-              getResolvedScene={getResolvedScene}
-              inheritCharacter={currentScene?.inheritCharacter || false}
-              inheritBackground={currentScene?.inheritBackground || false}
-              onToggleInheritCharacter={handleToggleInheritCharacter}
-              onToggleInheritBackground={handleToggleInheritBackground}
-            />
-          </div>
-        </div>
-      )}
+      <Controls
+        isOpen={showControls}
+        onClose={() => setShowControls(false)}
+        name={currentScene?.inheritCharacter ? '' : (currentScene?.character || '主角')}
+        setName={handleNameChange}
+        text={currentScene?.inheritText ? '' : (currentScene?.text || '')}
+        setText={handleTextChange}
+        typewriterSpeed={typewriterSpeed}
+        setTypewriterSpeed={setTypewriterSpeed}
+        onImageUpload={handleImageUpload}
+        onClearBackground={handleClearBackground}
+        isGenerating={loading}
+        onAiText={handleAiText}
+        onAiImage={handleAiImage}
+        characters={getSortedCharacters()}
+        onSaveCharacter={handleSaveCharacter}
+        onSelectCharacter={handleSelectCharacter}
+        onDeleteCharacter={handleDeleteCharacter}
+        mode={mode}
+        scenes={scenes}
+        currentSceneIndex={currentSceneIndex}
+        onModeToggle={handleModeToggle}
+        onSelectScene={setCurrentSceneIndex}
+        onAddScene={addScene}
+        onDeleteScene={deleteScene}
+        onMoveScene={moveScene}
+        getResolvedScene={getResolvedScene}
+        inheritCharacter={currentScene?.inheritCharacter || false}
+        inheritBackground={currentScene?.inheritBackground || false}
+        onToggleInheritCharacter={handleToggleInheritCharacter}
+        onToggleInheritBackground={handleToggleInheritBackground}
+      />
 
       {error && <div style={{
         position: 'fixed', top: 10, left: 10,
