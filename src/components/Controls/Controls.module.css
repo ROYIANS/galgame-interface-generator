@@ -12,35 +12,41 @@
     justify-content: center;
     align-items: center;
     animation: fadeIn 0.2s ease-out;
+    padding: 20px;
+    /* Ensure safe area from edges */
 }
 
 .wrapper {
     position: relative;
     width: 90%;
     max-width: 600px;
-    /* Reduced width for better game look */
-    max-height: 90vh;
+    max-height: 85vh;
+    /* Limit height to leave room for header */
     display: flex;
     flex-direction: column;
     animation: scaleIn 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    margin-top: 20px;
+    /* Push down slightly to ensure header doesn't touch top */
 }
 
 .controlsContainer {
     background: rgba(253, 246, 227, 0.95);
-    /* Cream background */
     border: 2px solid #dcd3b6;
     border-radius: 8px;
     padding: 24px;
-    padding-top: 50px;
-    /* Space for close button if inside, but we moved it out/on top */
+    padding-top: 40px;
+    /* Space for content elements */
     color: #4a3b2a;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: thin;
     scrollbar-color: #c7a060 rgba(199, 160, 96, 0.2);
-    /* Decorative top accent */
     position: relative;
+    /* Ensure container respects wrapper max-height */
+    flex: 1;
+    min-height: 0;
+    /* Important for flex child scrolling */
 }
 
 /* Decorative top line */
@@ -355,12 +361,15 @@ textarea:focus {
 @media (max-width: 600px) {
     .wrapper {
         width: 95%;
-        max-height: 95vh;
+        max-height: 80vh;
+        /* Reduced max height on mobile */
+        margin-top: 40px;
+        /* More top margin for header */
     }
 
     .controlsContainer {
         padding: 20px;
-        padding-top: 45px;
+        padding-top: 35px;
     }
 
     .row {
@@ -381,9 +390,20 @@ textarea:focus {
 
     .closeBtn {
         right: -10px;
-        top: -10px;
-        width: 32px;
-        height: 32px;
+        top: -15px;
+        /* Keep position consistent */
+        width: 36px;
+        height: 36px;
+    }
+
+    .header {
+        top: -25px;
+        /* Adjust header position */
+        padding: 4px 20px;
+    }
+
+    .header h2 {
+        font-size: 1rem;
     }
 }
 

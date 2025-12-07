@@ -42,11 +42,12 @@ const AchievementPanel = ({ isOpen, onClose, unlocked, stats, getProgress }) => 
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.panel} onClick={(e) => e.stopPropagation()}>
+        <button onClick={onClose} className={styles.closeBtn}>
+          <X size={20} />
+        </button>
+
         <div className={styles.header}>
-          <h2><Trophy size={24} color="#c7a060" /> 我的成就</h2>
-          <button onClick={onClose} className={styles.closeBtn}>
-            <X size={20} />
-          </button>
+          <h2><Trophy size={20} color="#c7a060" /> 我的成就</h2>
         </div>
 
         <div className={styles.progress}>
