@@ -190,7 +190,7 @@ export const useScenes = () => {
             {
               id: `scene_${Date.now()}`,
               order: 0,
-              character: '主角',
+              character: '',
               text: '',
               background: null,
               inheritCharacter: false,

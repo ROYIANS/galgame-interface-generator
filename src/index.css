@@ -8,6 +8,11 @@
   --crt-flicker-opacity: 0.05;
 }
 
+html {
+  overflow-x: hidden; /* 防止横向滚动 */
+  overflow-y: auto;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -16,6 +21,8 @@ body {
   font-family: 'DotGothic16', sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: none;
+  position: relative; /* 为fixed定位的子元素提供参考 */
+  width: 100vw; /* 确保body宽度不超过视口 */
 }
 
 * {
@@ -92,9 +99,13 @@ body {
 .mobile-action-bar {
   display: none;
   position: fixed;
-  top: 10px;
-  right: 10px;
+  top: 50%; /* 垂直居中 */
+  right: -20px;
   z-index: 999;
+  max-width: 80%; /* 限制最大宽度,避免占满整个屏幕 */
+  transform: translateY(-50%); /* 垂直居中 */
+  max-height: calc(100vh - 40px); /* 确保不超出屏幕 */
+  overflow: visible; /* 允许toggle按钮显示在外面 */
 }
 
 @media (max-width: 768px) {

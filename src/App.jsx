@@ -506,7 +506,7 @@ function App() {
       <Controls
         isOpen={showControls}
         onClose={() => setShowControls(false)}
-        name={currentScene?.inheritCharacter ? '' : (currentScene?.character || '主角')}
+        name={currentScene?.inheritCharacter ? '' : (currentScene?.character || '')}
         setName={handleNameChange}
         text={currentScene?.inheritText ? '' : (currentScene?.text || '')}
         setText={handleTextChange}

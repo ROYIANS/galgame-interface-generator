@@ -111,8 +111,10 @@ Style Requirements:
   * Liminal spaces (empty playgrounds, endless forests, glitchy patterns)
 
 Forbidden:
-- NO text overlays, NO dialogue boxes, NO UI elements
+- ABSOLUTELY NO text, letters, words, numbers, or any written characters in the image
+- NO text overlays, NO dialogue boxes, NO UI elements, NO signs, NO labels
 - NO photo-realistic style
+- The image must be purely visual without any textual elements whatsoever
 
 Based on user input: "${prompt}"
 Create a pixel art CG that captures the dreamcore mood and incorporates relevant visual elements.`;

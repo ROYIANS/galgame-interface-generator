@@ -13,10 +13,10 @@
     border: 2px solid #f0e6d2;
 }
 
-/* 移动端：竖排布局，米黄色背景（应用到mobile-action-bar中的ActionBar） */
+/* 移动端：竖排布局,米黄色背景（应用到mobile-action-bar中的ActionBar） */
 @media (max-width: 768px) {
     .actionBar {
-        position: static; /* 由父容器.mobile-action-bar控制定位 */
+        position: relative;
         flex-direction: column;
         gap: 6px;
         padding: 8px 6px;
@@ -24,6 +24,75 @@
         background-color: #f0e6d2; /* 米黄色 */
         border: 2px solid #5c4d3c;
         max-width: none;
+        transition: transform 0.3s ease;
+        overflow: visible; /* 让toggle按钮可以显示在外面 */
+        max-height: calc(100vh - 40px); /* 防止超出屏幕 */
+    }
+
+    /* 收起状态 - 完全隐藏到右边 */
+    .actionBar.collapsed {
+        transform: translateX(calc(100% + 4px)); /* 完全隐藏,留4px间距 */
+    }
+
+    /* 展开状态 */
+    .actionBar.expanded {
+        transform: translateX(0);
+    }
+}
+
+/* Toggle按钮 - 仅在移动端显示 */
+.toggleBtn {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .toggleBtn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f0e6d2;
+        border: 2px solid #5c4d3c;
+        color: #4a3b2a;
+        cursor: pointer;
+        padding: 0;
+        flex-shrink: 0;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        position: absolute;
+        left: -40px; /* 放在ActionBar左边 */
+        top: 50%;
+        transform: translateY(-50%);
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        z-index: 10;
+    }
+
+    .toggleBtn:hover {
+        background: rgba(240, 230, 210, 0.95);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .toggleBtn:active {
+        background: rgba(220, 210, 190, 1);
+        transform: translateY(-50%) scale(0.95);
+    }
+}
+
+/* Actions容器 - 包裹所有按钮 */
+.actionsContainer {
+    display: contents; /* PC端使用contents保持原有布局 */
+}
+
+@media (max-width: 768px) {
+    .actionsContainer {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden; /* 隐藏横向滚动 */
+        max-height: calc(100vh - 80px); /* 防止超出屏幕 */
     }
 }
 
