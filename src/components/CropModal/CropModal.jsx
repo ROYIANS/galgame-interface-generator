@@ -38,6 +38,11 @@ const CropModal = ({ isOpen, imageSrc, onClose, onCropComplete }) => {
     const [zoom, setZoom] = useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
 
+    // 检测是否为移动端
+    const isMobile = window.innerWidth <= 768;
+    // 移动端使用 9:16 (竖屏)，PC端使用 16:9 (横屏)
+    const aspectRatio = isMobile ? 9 / 16 : 16 / 9;
+
     const onCropChange = (crop) => {
         setCrop(crop);
     };
@@ -70,7 +75,7 @@ const CropModal = ({ isOpen, imageSrc, onClose, onCropComplete }) => {
                         image={imageSrc}
                         crop={crop}
                         zoom={zoom}
-                        aspect={16 / 9}
+                        aspect={aspectRatio}
                         onCropChange={onCropChange}
                         onCropComplete={onCropAreaChange}
                         onZoomChange={onZoomChange}

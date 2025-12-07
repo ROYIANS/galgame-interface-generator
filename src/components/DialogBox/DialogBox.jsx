@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useTypewriter } from '../../hooks/useTypewriter';
 import ActionBar from '../ActionBar/ActionBar';
 import styles from './DialogBox.module.css';
@@ -19,6 +19,14 @@ const DialogBox = ({
     isMuted
 }) => {
     const displayedText = useTypewriter(text, typewriterSpeed, replayCounter);
+    const textBoxRef = useRef(null);
+
+    // 打字机效果时自动滚动到底部
+    useEffect(() => {
+        if (textBoxRef.current) {
+            textBoxRef.current.scrollTop = textBoxRef.current.scrollHeight;
+        }
+    }, [displayedText]);
 
     return (
         <div className={styles.wrapper}>
@@ -45,7 +53,7 @@ const DialogBox = ({
                     />
                 </div>
 
-                <div className={styles.textBox}>
+                <div className={styles.textBox} ref={textBoxRef}>
                     <p className={styles.text}>{displayedText}</p>
 
                     {displayedText.length === text?.length && (

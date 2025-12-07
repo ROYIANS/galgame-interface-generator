@@ -53,7 +53,32 @@
 
 .textBox {
     width: 100%;
-    height: 100%;
+    max-height: 140px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 10px;
+    /* 自定义滚动条样式 */
+    scrollbar-width: thin;
+    scrollbar-color: #c7a060 rgba(199, 160, 96, 0.2);
+}
+
+/* Webkit浏览器滚动条样式 */
+.textBox::-webkit-scrollbar {
+    width: 6px;
+}
+
+.textBox::-webkit-scrollbar-track {
+    background: rgba(199, 160, 96, 0.2);
+    border-radius: 3px;
+}
+
+.textBox::-webkit-scrollbar-thumb {
+    background: #c7a060;
+    border-radius: 3px;
+}
+
+.textBox::-webkit-scrollbar-thumb:hover {
+    background: #d4b070;
 }
 
 .text {
@@ -94,5 +119,41 @@
 
     50% {
         transform: translateY(5px);
+    }
+}
+
+/* 移动端样式优化 */
+@media (max-width: 768px) {
+    .wrapper {
+        width: 95%;
+    }
+
+    .dialogContainer {
+        padding: 15px 25px;
+        min-height: 100px;
+    }
+
+    .nameTag {
+        top: -18px;
+        left: 20px;
+        padding: 3px 20px;
+        font-size: 0.85rem;
+    }
+
+    .textBox {
+        max-height: 110px;
+    }
+
+    .text {
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    .nextCursor {
+        bottom: 8px;
+        right: 15px;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 12px solid #c7a060;
     }
 }
