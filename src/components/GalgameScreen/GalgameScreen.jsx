@@ -17,7 +17,12 @@ const GalgameScreen = forwardRef(({
     onLoadImage,
     onToggleMute,
     isMuted,
-    onShowAchievements
+    onShowAchievements,
+    // 多场景相关
+    mode,
+    currentSceneIndex,
+    totalScenes,
+    onNextScene
 }, ref) => {
     // 视差效果状态
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -38,8 +43,25 @@ const GalgameScreen = forwardRef(({
     const parallaxX = -mousePosition.x * 20;
     const parallaxY = -mousePosition.y * 20;
 
+    // 点击屏幕切换场景（仅在多场景模式下）
+    const handleScreenClick = (e) => {
+        // 如果是多场景模式且有切换函数
+        if (mode === 'advanced' && onNextScene) {
+            // 排除点击 DialogBox 内的按钮
+            const isActionButton = e.target.closest('button');
+            if (!isActionButton) {
+                onNextScene();
+            }
+        }
+    };
+
     return (
-        <div className={styles.screenWrapper} ref={ref}>
+        <div
+            className={styles.screenWrapper}
+            ref={ref}
+            onClick={handleScreenClick}
+            style={{ cursor: mode === 'advanced' ? 'pointer' : 'default' }}
+        >
             <div
                 className={styles.backgroundLayer}
                 style={backgroundImage ? {
@@ -66,6 +88,9 @@ const GalgameScreen = forwardRef(({
                 onToggleMute={onToggleMute}
                 isMuted={isMuted}
                 onShowAchievements={onShowAchievements}
+                mode={mode}
+                currentSceneIndex={currentSceneIndex}
+                totalScenes={totalScenes}
             />
         </div>
     );

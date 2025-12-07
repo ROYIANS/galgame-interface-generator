@@ -9,6 +9,9 @@
     color: #4a3b2a;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     border-radius: 8px;
+    max-height: 90vh;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .row {
@@ -168,4 +171,81 @@ button:active {
         width: 100%;
         justify-content: center;
     }
+}
+
+/* 模式切换 */
+.modeToggle {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(92, 77, 60, 0.05);
+    border-radius: 8px;
+    border: 2px solid #e0d5c0;
+}
+
+.modeBtn {
+    width: 100%;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #f0e6d2 0%, #e8dcc8 100%);
+    color: #5c4d3c;
+    border: 2px solid #5c4d3c;
+    border-radius: 8px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'DotGothic16', sans-serif;
+    font-weight: bold;
+}
+
+.modeBtn:hover {
+    background: linear-gradient(135deg, #e8dcc8 0%, #dcd3b6 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(92, 77, 60, 0.2);
+}
+
+.modeBtn.activeMode {
+    background: linear-gradient(135deg, #c7a060 0%, #d4b070 100%);
+    color: #fff;
+    border-color: #a08c70;
+    box-shadow: 0 4px 12px rgba(199, 160, 96, 0.4);
+}
+
+.modeBtn.activeMode:hover {
+    background: linear-gradient(135deg, #d4b070 0%, #c7a060 100%);
+}
+
+.modeHint {
+    display: block;
+    text-align: center;
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: #7a6a4f;
+    font-style: italic;
+}
+
+/* 继承复选框 */
+.inheritCheckbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 15px;
+    font-weight: normal;
+    font-size: 0.85rem;
+    color: #7a6a4f;
+    cursor: pointer;
+}
+
+.inheritCheckbox input[type="checkbox"] {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
+
+input:disabled {
+    background: #f0f0f0;
+    color: #999;
+    cursor: not-allowed;
 }

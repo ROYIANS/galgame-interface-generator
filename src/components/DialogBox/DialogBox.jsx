@@ -17,7 +17,10 @@ const DialogBox = ({
     onLoadImage,
     onToggleMute,
     isMuted,
-    onShowAchievements
+    onShowAchievements,
+    mode,
+    currentSceneIndex,
+    totalScenes
 }) => {
     const displayedText = useTypewriter(text, typewriterSpeed, replayCounter);
     const textBoxRef = useRef(null);
@@ -29,6 +32,9 @@ const DialogBox = ({
         }
     }, [displayedText]);
 
+    const isAdvancedMode = mode === 'advanced';
+    const showSceneIndicator = isAdvancedMode && totalScenes > 1;
+
     return (
         <div className={styles.wrapper}>
             <div className={styles.dialogContainer}>
@@ -36,6 +42,13 @@ const DialogBox = ({
                 {name && (
                     <div className={styles.nameTag}>
                         {name}
+                    </div>
+                )}
+
+                {/* 场景指示器 */}
+                {showSceneIndicator && (
+                    <div className={styles.sceneIndicator}>
+                        {currentSceneIndex + 1} / {totalScenes}
                     </div>
                 )}
 

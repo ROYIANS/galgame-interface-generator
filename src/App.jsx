@@ -11,19 +11,50 @@ import { useAI } from './hooks/useAI';
 import { useBackgroundMusic } from './hooks/useBackgroundMusic';
 import { useCharacters } from './hooks/useCharacters';
 import { useAchievements } from './hooks/useAchievements';
+import { useScenes } from './hooks/useScenes';
+import { compressBase64Image } from './utils/imageCompression';
+import { getAllScreenshots, saveScreenshot, deleteScreenshot } from './utils/indexedDB';
 import html2canvas from 'html2canvas';
 
 function App() {
-  const [name, setName] = useState('？？？');
-  const [text, setText] = useState('在期待某件事情的发生吗？');
-  const [backgroundImage, setBackgroundImage] = useState('');
+  // 场景管理
+  const {
+    scenes,
+    currentSceneIndex,
+    mode,
+    getCurrentScene,
+    getCurrentResolvedScene,
+    getResolvedScene,
+    setMode,
+    addScene,
+    deleteScene,
+    updateCurrentScene,
+    setCurrentSceneIndex,
+    moveScene,
+    getAllScenesContext
+  } = useScenes();
+
+  // 从当前场景获取数据
+  const currentScene = getCurrentScene();
+  const resolvedScene = getCurrentResolvedScene();
+
   const [replayCounter, setReplayCounter] = useState(0);
   const [showCRT, setShowCRT] = useState(true);
   const [typewriterSpeed, setTypewriterSpeed] = useState(65);
-  const [screenshots, setScreenshots] = useState(() => {
-    const saved = localStorage.getItem('galgame_screenshots');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [screenshots, setScreenshots] = useState([]);
+
+  // 从 IndexedDB 加载截图
+  useEffect(() => {
+    const loadScreenshots = async () => {
+      try {
+        const savedScreenshots = await getAllScreenshots();
+        setScreenshots(savedScreenshots);
+      } catch (error) {
+        console.error('Failed to load screenshots:', error);
+      }
+    };
+    loadScreenshots();
+  }, []);
 
   // Modals
   const [showSettings, setShowSettings] = useState(false);
@@ -73,23 +104,18 @@ function App() {
     localStorage.setItem('galgame_config', JSON.stringify(config));
   }, [config]);
 
-  useEffect(() => {
-    localStorage.setItem('galgame_screenshots', JSON.stringify(screenshots));
-  }, [screenshots]);
-
   // 当文本改变时，追踪最长文本
   useEffect(() => {
+    const text = resolvedScene?.text || '';
     if (text && text.length > stats.longestText) {
       updateStats({ longestText: text.length });
     }
-  }, [text, stats.longestText, updateStats]);
+  }, [resolvedScene?.text, stats.longestText, updateStats]);
 
-  // 追踪场景总数（每次编辑对话时）
+  // 追踪场景总数
   useEffect(() => {
-    if (name || text) {
-      updateStats({ totalScenes: stats.totalScenes + 1 });
-    }
-  }, []); // 只在首次加载时执行
+    updateStats({ totalScenes: scenes.length });
+  }, [scenes.length, updateStats]);
 
   // 追踪角色创建数
   useEffect(() => {
@@ -125,23 +151,42 @@ function App() {
   };
 
   const handleCropComplete = (croppedUrl) => {
-    setBackgroundImage(croppedUrl);
+    updateCurrentScene({ background: croppedUrl, inheritBackground: false });
     setTempImage(null);
   };
 
+  const handleClearBackground = () => {
+    updateCurrentScene({ background: null, inheritBackground: false });
+  };
+
   const handleAiText = async () => {
-    const newText = await generateText(text, config);
+    // 只重写当前场景的文本
+    const currentText = resolvedScene?.text || '';
+    const newText = await generateText(currentText, config);
     if (newText) {
-      setText(newText);
+      updateCurrentScene({ text: newText, inheritText: false });
       // 追踪 AI 使用
       updateStats({ aiGenerations: stats.aiGenerations + 1 });
     }
   };
 
   const handleAiImage = async () => {
-    const url = await generateImage(text, config);
+    // 只基于当前场景的文本生成图片
+    const currentText = resolvedScene?.text || '';
+    const url = await generateImage(currentText, config);
     if (url) {
-      setBackgroundImage(url);
+      // 如果是base64图片（data:开头），压缩它
+      let finalUrl = url;
+      if (url.startsWith('data:')) {
+        try {
+          finalUrl = await compressBase64Image(url, 1024, 0.7);
+          console.log('Image compressed. Original size:', url.length, 'Compressed size:', finalUrl.length);
+        } catch (error) {
+          console.error('Failed to compress image:', error);
+          // 如果压缩失败，使用原图
+        }
+      }
+      updateCurrentScene({ background: finalUrl, inheritBackground: false });
       // 追踪 AI 使用
       updateStats({ aiGenerations: stats.aiGenerations + 1 });
     }
@@ -248,24 +293,34 @@ function App() {
           scale: 2 // Higher resolution
         });
 
-        canvas.toBlob((blob) => {
+        canvas.toBlob(async (blob) => {
           if (blob) {
+            // 下载到本地
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
             link.download = `galgame_${Date.now()}.png`;
             link.click();
 
-            // Save to screenshots log
-            const newScreenshot = {
-              id: Date.now(),
-              url: url,
-              timestamp: Date.now()
-            };
-            setScreenshots(prev => [newScreenshot, ...prev]);
+            // 保存到 IndexedDB
+            const screenshotId = Date.now();
+            try {
+              await saveScreenshot(screenshotId, blob);
 
-            // 追踪截图数量
-            updateStats({ totalScreenshots: screenshots.length + 1 });
+              // 更新状态（添加临时 URL 用于立即显示）
+              const newScreenshot = {
+                id: screenshotId,
+                url: url,
+                timestamp: screenshotId
+              };
+              setScreenshots(prev => [newScreenshot, ...prev]);
+
+              // 追踪截图数量
+              updateStats({ totalScreenshots: screenshots.length + 1 });
+            } catch (error) {
+              console.error('Failed to save screenshot to IndexedDB:', error);
+              alert('保存截图失败！');
+            }
           }
         });
       } catch (err) {
@@ -283,15 +338,24 @@ function App() {
     setShowCRT(prev => !prev);
   };
 
-  const handleDeleteScreenshot = (id) => {
-    setScreenshots(prev => {
-      const updated = prev.filter(s => s.id !== id);
-      const toDelete = prev.find(s => s.id === id);
-      if (toDelete) {
-        URL.revokeObjectURL(toDelete.url);
-      }
-      return updated;
-    });
+  const handleDeleteScreenshot = async (id) => {
+    try {
+      // 从 IndexedDB 删除
+      await deleteScreenshot(id);
+
+      // 更新状态
+      setScreenshots(prev => {
+        const updated = prev.filter(s => s.id !== id);
+        const toDelete = prev.find(s => s.id === id);
+        if (toDelete && toDelete.url.startsWith('blob:')) {
+          URL.revokeObjectURL(toDelete.url);
+        }
+        return updated;
+      });
+    } catch (error) {
+      console.error('Failed to delete screenshot:', error);
+      alert('删除截图失败！');
+    }
   };
 
   // 角色相关处理
@@ -302,12 +366,59 @@ function App() {
   };
 
   const handleSelectCharacter = (character) => {
-    setName(character.name);
+    updateCurrentScene({ character: character.name, inheritCharacter: false });
     updateCharacterUsage(character.id);
   };
 
   const handleDeleteCharacter = (characterId) => {
     deleteCharacter(characterId);
+  };
+
+  // 场景数据更新处理
+  const handleNameChange = (newName) => {
+    updateCurrentScene({ character: newName, inheritCharacter: false });
+  };
+
+  const handleTextChange = (newText) => {
+    updateCurrentScene({ text: newText, inheritText: false });
+  };
+
+  const handleModeToggle = () => {
+    setMode(mode === 'simple' ? 'advanced' : 'simple');
+  };
+
+  const handleToggleInheritCharacter = (inherit) => {
+    if (inherit) {
+      updateCurrentScene({ character: null, inheritCharacter: true });
+    } else {
+      const previousScene = getResolvedScene(currentSceneIndex - 1);
+      updateCurrentScene({
+        character: previousScene?.character || '主角',
+        inheritCharacter: false
+      });
+    }
+  };
+
+  const handleToggleInheritBackground = (inherit) => {
+    if (inherit) {
+      updateCurrentScene({ background: null, inheritBackground: true });
+    } else {
+      const previousScene = getResolvedScene(currentSceneIndex - 1);
+      updateCurrentScene({
+        background: previousScene?.background || null,
+        inheritBackground: false
+      });
+    }
+  };
+
+  // 切换到下一个场景（循环）
+  const handleNextScene = () => {
+    if (mode === 'advanced' && scenes.length > 1) {
+      const nextIndex = (currentSceneIndex + 1) % scenes.length;
+      setCurrentSceneIndex(nextIndex);
+      // 重放打字机效果
+      setReplayCounter(prev => prev + 1);
+    }
   };
 
   return (
@@ -369,10 +480,10 @@ function App() {
         )}
 
         <GalgameScreen
-          name={name}
-          text={text}
+          name={resolvedScene?.character || '主角'}
+          text={resolvedScene?.text || ''}
           typewriterSpeed={typewriterSpeed}
-          backgroundImage={backgroundImage}
+          backgroundImage={resolvedScene?.background || ''}
           replayCounter={replayCounter}
           onConfig={() => setShowSettings(true)}
           onEdit={() => setShowControls(true)}
@@ -384,6 +495,10 @@ function App() {
           onToggleMute={toggleMute}
           isMuted={isMuted}
           onShowAchievements={() => setShowAchievements(true)}
+          mode={mode}
+          currentSceneIndex={currentSceneIndex}
+          totalScenes={scenes.length}
+          onNextScene={handleNextScene}
         />
       </div>
 
@@ -396,9 +511,18 @@ function App() {
           zIndex: 1100,
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          padding: '20px'
         }}>
-          <div style={{ position: 'relative', width: '90%', maxWidth: '800px' }}>
+          <div style={{
+            position: 'relative',
+            width: '90%',
+            maxWidth: '800px',
+            maxHeight: '90vh',
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
             <button
               onClick={() => setShowControls(false)}
               style={{
@@ -417,13 +541,14 @@ function App() {
               ✕
             </button>
             <Controls
-              name={name}
-              setName={setName}
-              text={text}
-              setText={setText}
+              name={currentScene?.inheritCharacter ? '' : (currentScene?.character || '主角')}
+              setName={handleNameChange}
+              text={currentScene?.inheritText ? '' : (currentScene?.text || '')}
+              setText={handleTextChange}
               typewriterSpeed={typewriterSpeed}
               setTypewriterSpeed={setTypewriterSpeed}
               onImageUpload={handleImageUpload}
+              onClearBackground={handleClearBackground}
               isGenerating={loading}
               onAiText={handleAiText}
               onAiImage={handleAiImage}
@@ -431,6 +556,19 @@ function App() {
               onSaveCharacter={handleSaveCharacter}
               onSelectCharacter={handleSelectCharacter}
               onDeleteCharacter={handleDeleteCharacter}
+              mode={mode}
+              scenes={scenes}
+              currentSceneIndex={currentSceneIndex}
+              onModeToggle={handleModeToggle}
+              onSelectScene={setCurrentSceneIndex}
+              onAddScene={addScene}
+              onDeleteScene={deleteScene}
+              onMoveScene={moveScene}
+              getResolvedScene={getResolvedScene}
+              inheritCharacter={currentScene?.inheritCharacter || false}
+              inheritBackground={currentScene?.inheritBackground || false}
+              onToggleInheritCharacter={handleToggleInheritCharacter}
+              onToggleInheritBackground={handleToggleInheritBackground}
             />
           </div>
         </div>

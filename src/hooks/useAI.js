@@ -91,6 +91,10 @@ Output ONLY the dialogue text, nothing else.`;
         try {
             const client = getClient(config);
 
+            // 检测是否为移动端
+            const isMobile = window.innerWidth <= 768;
+            const aspectRatio = isMobile ? '9:16' : '16:9';
+
             // 梦核/Dreamcore风格的增强prompt
             const enhancedPrompt = `Create a dreamcore/weirdcore style pixel art visual novel CG scene based on: "${prompt}".
 
@@ -98,6 +102,7 @@ Style Requirements:
 - **Dreamcore/Weirdcore aesthetic**: Surreal, nostalgic, liminal, ethereal, slightly unsettling yet familiar
 - **Pixel art**: 16-bit or 32-bit retro JRPG style with soft pastel colors (lavender, mint, baby blue, faded magenta)
 - **Atmosphere**: Dream-like, psychedelic, liminal space feel with vaporwave undertones
+- **Aspect Ratio**: ${aspectRatio} (${isMobile ? 'vertical/portrait for mobile' : 'horizontal/landscape for desktop'})
 - **Elements can include**:
   * Characters in pixel art anime style (if relevant to the prompt)
   * Surreal environments (floating objects, impossible architecture, distorted perspectives)
@@ -119,8 +124,6 @@ Create a pixel art CG that captures the dreamcore mood and incorporates relevant
 
             if (isGeminiModel) {
                 // Use chat completions API for Gemini-style models
-                const aspectRatio = "16:9"; // Visual novel standard aspect ratio
-
                 const response = await client.chat.completions.create({
                     model: imageModel,
                     messages: [
@@ -149,11 +152,19 @@ Create a pixel art CG that captures the dreamcore mood and incorporates relevant
                 throw new Error("No image data received from Gemini model");
             } else {
                 // Use standard OpenAI images API for DALL-E models
+                // DALL-E 3 只支持固定尺寸，选择最接近的
+                let size = "1024x1024";
+                if (isMobile) {
+                    size = "1024x1792"; // 接近 9:16
+                } else {
+                    size = "1792x1024"; // 接近 16:9
+                }
+
                 const response = await client.images.generate({
                     model: imageModel,
                     prompt: enhancedPrompt,
                     n: 1,
-                    size: "1024x1024",
+                    size: size,
                 });
                 return response.data[0].url;
             }
