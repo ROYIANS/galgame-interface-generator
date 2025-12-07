@@ -14,7 +14,7 @@ import { useAchievements } from './hooks/useAchievements';
 import html2canvas from 'html2canvas';
 
 function App() {
-  const [name, setName] = useState('主角');
+  const [name, setName] = useState('？？？');
   const [text, setText] = useState('在期待某件事情的发生吗？');
   const [backgroundImage, setBackgroundImage] = useState('');
   const [replayCounter, setReplayCounter] = useState(0);

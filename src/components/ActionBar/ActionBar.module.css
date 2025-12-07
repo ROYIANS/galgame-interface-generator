@@ -137,6 +137,7 @@
 /* 成就按钮特殊样式 */
 .achievementBtn {
     position: relative;
+    overflow: visible;
 }
 
 .achievementBtn::before {
