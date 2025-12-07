@@ -525,8 +525,9 @@ textarea:focus {
     cursor: pointer;
     transition: all 0.3s ease;
     padding: 0;
-    overflow: hidden;
+    overflow: visible; /* 改为 visible，让删除按钮可以显示在外面 */
     color: #c7a060;
+    position: relative; /* 为删除按钮定位 */
 }
 
 .avatarButton:hover:not(:disabled) {
@@ -545,4 +546,34 @@ textarea:focus {
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
+    display: block; /* 确保图片正确显示 */
+}
+
+/* 删除头像按钮 */
+.deleteAvatarBtn {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ff5a5f;
+    border: 2px solid #fff;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.deleteAvatarBtn:hover {
+    background: #ff3339;
+    transform: scale(1.1);
+}
+
+.deleteAvatarBtn:active {
+    transform: scale(0.95);
 }

@@ -62,6 +62,12 @@ const Controls = ({
         }
     };
 
+    // 删除头像
+    const handleDeleteAvatar = (e) => {
+        e.stopPropagation();
+        setCharacterAvatar(null);
+    };
+
     // 保存角色（包含头像）
     const handleSaveCharacterWithAvatar = () => {
         if (onSaveCharacter) {
@@ -165,7 +171,18 @@ const Controls = ({
                                         title="上传角色头像"
                                     >
                                         {characterAvatar ? (
-                                            <img src={characterAvatar} alt="Avatar" className={styles.avatarPreview} />
+                                            <>
+                                                <img src={characterAvatar} alt="Avatar" className={styles.avatarPreview} />
+                                                {/* 删除按钮 */}
+                                                <button
+                                                    type="button"
+                                                    className={styles.deleteAvatarBtn}
+                                                    onClick={handleDeleteAvatar}
+                                                    title="删除头像"
+                                                >
+                                                    <X size={14} />
+                                                </button>
+                                            </>
                                         ) : (
                                             <User size={24} />
                                         )}
