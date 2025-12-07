@@ -359,9 +359,9 @@ function App() {
   };
 
   // 角色相关处理
-  const handleSaveCharacter = (characterName) => {
+  const handleSaveCharacter = (characterName, avatar = null) => {
     if (characterName && characterName.trim()) {
-      addCharacter(characterName.trim());
+      addCharacter(characterName.trim(), avatar);
     }
   };
 
@@ -499,6 +499,7 @@ function App() {
           currentSceneIndex={currentSceneIndex}
           totalScenes={scenes.length}
           onNextScene={handleNextScene}
+          characterAvatar={characters.find(c => c.name === resolvedScene?.character)?.avatar}
         />
       </div>
 
@@ -521,6 +522,7 @@ function App() {
         onSaveCharacter={handleSaveCharacter}
         onSelectCharacter={handleSelectCharacter}
         onDeleteCharacter={handleDeleteCharacter}
+        currentCharacterAvatar={characters.find(c => c.name === currentScene?.character)?.avatar}
         mode={mode}
         scenes={scenes}
         currentSceneIndex={currentSceneIndex}

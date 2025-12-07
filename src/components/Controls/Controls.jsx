@@ -1,5 +1,5 @@
-import React from 'react';
-import { Sparkles, Palette, Lock, Save, List, X } from 'lucide-react';
+import React, { useState } from 'react';
+import { Sparkles, Palette, Lock, Save, List, X, User } from 'lucide-react';
 import CharacterLibrary from '../CharacterLibrary/CharacterLibrary';
 import SceneList from '../SceneList/SceneList';
 import styles from './Controls.module.css';
@@ -23,6 +23,7 @@ const Controls = ({
     onSaveCharacter,
     onSelectCharacter,
     onDeleteCharacter,
+    currentCharacterAvatar, // 新增：当前角色的头像
     // 多场景相关
     mode,
     scenes,
@@ -38,9 +39,38 @@ const Controls = ({
     onToggleInheritCharacter,
     onToggleInheritBackground
 }) => {
+    const [characterAvatar, setCharacterAvatar] = useState(null);
+
+    // 当前角色头像变化时，更新本地状态
+    React.useEffect(() => {
+        setCharacterAvatar(currentCharacterAvatar || null);
+    }, [currentCharacterAvatar, name]);
+
     if (!isOpen) return null;
 
     const isAdvancedMode = mode === 'advanced';
+
+    // 处理头像上传 - 直接读取图片
+    const handleAvatarUpload = (e) => {
+        const file = e.target.files?.[0];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                setCharacterAvatar(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    // 保存角色（包含头像）
+    const handleSaveCharacterWithAvatar = () => {
+        if (onSaveCharacter) {
+            // 如果用户上传了新头像，使用新头像；否则使用当前头像
+            const avatarToSave = characterAvatar;
+            onSaveCharacter(name, avatarToSave);
+            // 注意：不清空头像，因为可能是修改现有角色
+        }
+    };
 
     return (
         <div className={styles.overlay}>
@@ -116,17 +146,45 @@ const Controls = ({
                                     </label>
                                 )}
                             </div>
-                            <input
-                                type="text"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                placeholder="Protagonist"
-                                disabled={isAdvancedMode && inheritCharacter}
-                            />
+                            <div className={styles.characterInputRow}>
+                                {/* 头像预览/上传按钮 */}
+                                <div className={styles.avatarUploadContainer}>
+                                    <input
+                                        id="avatar-upload"
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleAvatarUpload}
+                                        style={{ display: 'none' }}
+                                        disabled={isAdvancedMode && inheritCharacter}
+                                    />
+                                    <button
+                                        type="button"
+                                        className={styles.avatarButton}
+                                        onClick={() => document.getElementById('avatar-upload').click()}
+                                        disabled={isAdvancedMode && inheritCharacter}
+                                        title="上传角色头像"
+                                    >
+                                        {characterAvatar ? (
+                                            <img src={characterAvatar} alt="Avatar" className={styles.avatarPreview} />
+                                        ) : (
+                                            <User size={24} />
+                                        )}
+                                    </button>
+                                </div>
+                                {/* 角色名称输入 */}
+                                <input
+                                    type="text"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    placeholder="Protagonist"
+                                    disabled={isAdvancedMode && inheritCharacter}
+                                    style={{ flex: 1 }}
+                                />
+                            </div>
                         </div>
                         <div className={styles.saveCharacterBtn}>
                             <button
-                                onClick={() => onSaveCharacter && onSaveCharacter(name)}
+                                onClick={handleSaveCharacterWithAvatar}
                                 disabled={!name || !name.trim() || (isAdvancedMode && inheritCharacter)}
                                 title="保存为常用角色"
                                 className={styles.iconBtn}

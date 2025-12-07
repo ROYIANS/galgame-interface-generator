@@ -20,7 +20,8 @@ const DialogBox = ({
     onShowAchievements,
     mode,
     currentSceneIndex,
-    totalScenes
+    totalScenes,
+    characterAvatar // 新增：角色头像
 }) => {
     const displayedText = useTypewriter(text, typewriterSpeed, replayCounter);
     const textBoxRef = useRef(null);
@@ -38,6 +39,13 @@ const DialogBox = ({
     return (
         <div className={styles.wrapper}>
             <div className={styles.dialogContainer}>
+                {/* Avatar - 头像显示 */}
+                {characterAvatar && (
+                    <div className={styles.avatarContainer}>
+                        <img src={characterAvatar} alt={name} className={styles.avatar} />
+                    </div>
+                )}
+
                 {/* Name tag on the left */}
                 {name && (
                     <div className={styles.nameTag}>

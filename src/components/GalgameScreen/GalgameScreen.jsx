@@ -22,7 +22,8 @@ const GalgameScreen = forwardRef(({
     mode,
     currentSceneIndex,
     totalScenes,
-    onNextScene
+    onNextScene,
+    characterAvatar // 新增：角色头像
 }, ref) => {
     // 视差效果状态
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -91,6 +92,7 @@ const GalgameScreen = forwardRef(({
                 mode={mode}
                 currentSceneIndex={currentSceneIndex}
                 totalScenes={totalScenes}
+                characterAvatar={characterAvatar}
             />
         </div>
     );

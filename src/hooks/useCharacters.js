@@ -20,9 +20,18 @@ export const useCharacters = () => {
     // 检查是否已存在
     const existing = characters.find(c => c.name === name.trim());
     if (existing) {
-      // 如果已存在，增加使用次数
-      updateCharacterUsage(existing.id);
-      return existing;
+      // 如果已存在，更新头像（如果提供了新头像）并增加使用次数
+      const updates = {
+        usageCount: (existing.usageCount || 0) + 1
+      };
+
+      // 如果提供了新头像，更新头像
+      if (avatar !== null && avatar !== undefined) {
+        updates.avatar = avatar;
+      }
+
+      updateCharacter(existing.id, updates);
+      return { ...existing, ...updates };
     }
 
     const newCharacter = {
