@@ -1,5 +1,6 @@
 import React from 'react';
-import { Sparkles, Palette, Lock } from 'lucide-react';
+import { Sparkles, Palette, Lock, Save } from 'lucide-react';
+import CharacterLibrary from '../CharacterLibrary/CharacterLibrary';
 import styles from './Controls.module.css';
 
 const Controls = ({
@@ -12,7 +13,12 @@ const Controls = ({
     onImageUpload,
     isGenerating,
     onAiText,
-    onAiImage
+    onAiImage,
+    // 角色库相关
+    characters,
+    onSaveCharacter,
+    onSelectCharacter,
+    onDeleteCharacter
 }) => {
     return (
         <div className={styles.controlsContainer}>
@@ -21,8 +27,18 @@ const Controls = ({
                 <Lock size={16} />
                 <p>所有数据保存在浏览器本地，不会上传到服务器</p>
             </div>
+
+            {/* 角色库 */}
+            {characters && characters.length > 0 && (
+                <CharacterLibrary
+                    characters={characters}
+                    onSelectCharacter={onSelectCharacter}
+                    onDeleteCharacter={onDeleteCharacter}
+                />
+            )}
+
             <div className={styles.row}>
-                <div className={styles.inputGroup}>
+                <div className={styles.inputGroup} style={{ flex: 1 }}>
                     <label>Character Name</label>
                     <input
                         type="text"
@@ -30,6 +46,17 @@ const Controls = ({
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Protagonist"
                     />
+                </div>
+                <div className={styles.saveCharacterBtn}>
+                    <button
+                        onClick={() => onSaveCharacter && onSaveCharacter(name)}
+                        disabled={!name || !name.trim()}
+                        title="保存为常用角色"
+                        className={styles.iconBtn}
+                    >
+                        <Save size={16} />
+                        保存角色
+                    </button>
                 </div>
 
                 <div className={styles.inputGroup}>

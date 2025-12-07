@@ -16,7 +16,8 @@ const DialogBox = ({
     onShowLog,
     onLoadImage,
     onToggleMute,
-    isMuted
+    isMuted,
+    onShowAchievements
 }) => {
     const displayedText = useTypewriter(text, typewriterSpeed, replayCounter);
     const textBoxRef = useRef(null);
@@ -50,6 +51,7 @@ const DialogBox = ({
                         onLoadImage={onLoadImage}
                         onToggleMute={onToggleMute}
                         isMuted={isMuted}
+                        onShowAchievements={onShowAchievements}
                     />
                 </div>
 

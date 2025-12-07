@@ -5,8 +5,12 @@ import Settings from './components/Settings/Settings';
 import CropModal from './components/CropModal/CropModal';
 import LogModal from './components/LogModal/LogModal';
 import ActionBar from './components/ActionBar/ActionBar';
+import AchievementPanel from './components/AchievementPanel/AchievementPanel';
+import AchievementToast from './components/AchievementToast/AchievementToast';
 import { useAI } from './hooks/useAI';
 import { useBackgroundMusic } from './hooks/useBackgroundMusic';
+import { useCharacters } from './hooks/useCharacters';
+import { useAchievements } from './hooks/useAchievements';
 import html2canvas from 'html2canvas';
 
 function App() {
@@ -26,6 +30,7 @@ function App() {
   const [showControls, setShowControls] = useState(false); // Controls hidden by default
   const [showCropper, setShowCropper] = useState(false);
   const [showLog, setShowLog] = useState(false);
+  const [showAchievements, setShowAchievements] = useState(false);
 
   // Cropping
   const [tempImage, setTempImage] = useState(null);
@@ -41,6 +46,26 @@ function App() {
   // Background music - 使用 public 目录下的文件
   const { isMuted, toggleMute } = useBackgroundMusic('/bgm.mp3');
 
+  // 角色管理
+  const {
+    characters,
+    addCharacter,
+    deleteCharacter,
+    updateCharacterUsage,
+    getSortedCharacters
+  } = useCharacters();
+
+  // 成就系统
+  const {
+    stats,
+    unlocked,
+    newlyUnlocked,
+    updateStats,
+    checkAchievements,
+    clearNewlyUnlocked,
+    getAchievementProgress
+  } = useAchievements();
+
   // Flash effect state
   const [flash, setFlash] = useState(false);
 
@@ -51,6 +76,30 @@ function App() {
   useEffect(() => {
     localStorage.setItem('galgame_screenshots', JSON.stringify(screenshots));
   }, [screenshots]);
+
+  // 当文本改变时，追踪最长文本
+  useEffect(() => {
+    if (text && text.length > stats.longestText) {
+      updateStats({ longestText: text.length });
+    }
+  }, [text, stats.longestText, updateStats]);
+
+  // 追踪场景总数（每次编辑对话时）
+  useEffect(() => {
+    if (name || text) {
+      updateStats({ totalScenes: stats.totalScenes + 1 });
+    }
+  }, []); // 只在首次加载时执行
+
+  // 追踪角色创建数
+  useEffect(() => {
+    updateStats({ charactersCreated: characters.length });
+  }, [characters.length, updateStats]);
+
+  // 检查成就解锁
+  useEffect(() => {
+    checkAchievements();
+  }, [stats, checkAchievements]);
 
   const resizeImage = (url) => {
     // Optional: could enforce max size here if needed
@@ -82,12 +131,20 @@ function App() {
 
   const handleAiText = async () => {
     const newText = await generateText(text, config);
-    if (newText) setText(newText);
+    if (newText) {
+      setText(newText);
+      // 追踪 AI 使用
+      updateStats({ aiGenerations: stats.aiGenerations + 1 });
+    }
   };
 
   const handleAiImage = async () => {
     const url = await generateImage(text, config);
-    if (url) setBackgroundImage(url);
+    if (url) {
+      setBackgroundImage(url);
+      // 追踪 AI 使用
+      updateStats({ aiGenerations: stats.aiGenerations + 1 });
+    }
   };
 
   const playShutterSound = () => {
@@ -206,6 +263,9 @@ function App() {
               timestamp: Date.now()
             };
             setScreenshots(prev => [newScreenshot, ...prev]);
+
+            // 追踪截图数量
+            updateStats({ totalScreenshots: screenshots.length + 1 });
           }
         });
       } catch (err) {
@@ -234,6 +294,22 @@ function App() {
     });
   };
 
+  // 角色相关处理
+  const handleSaveCharacter = (characterName) => {
+    if (characterName && characterName.trim()) {
+      addCharacter(characterName.trim());
+    }
+  };
+
+  const handleSelectCharacter = (character) => {
+    setName(character.name);
+    updateCharacterUsage(character.id);
+  };
+
+  const handleDeleteCharacter = (characterId) => {
+    deleteCharacter(characterId);
+  };
+
   return (
     <div style={{
       height: '100vh',
@@ -258,6 +334,7 @@ function App() {
           onLoadImage={handleLoadImageFromButton}
           onToggleMute={toggleMute}
           isMuted={isMuted}
+          onShowAchievements={() => setShowAchievements(true)}
         />
       </div>
 
@@ -306,6 +383,7 @@ function App() {
           onLoadImage={handleLoadImageFromButton}
           onToggleMute={toggleMute}
           isMuted={isMuted}
+          onShowAchievements={() => setShowAchievements(true)}
         />
       </div>
 
@@ -349,6 +427,10 @@ function App() {
               isGenerating={loading}
               onAiText={handleAiText}
               onAiImage={handleAiImage}
+              characters={getSortedCharacters()}
+              onSaveCharacter={handleSaveCharacter}
+              onSelectCharacter={handleSelectCharacter}
+              onDeleteCharacter={handleDeleteCharacter}
             />
           </div>
         </div>
@@ -379,6 +461,21 @@ function App() {
         screenshots={screenshots}
         onDelete={handleDeleteScreenshot}
       />
+
+      <AchievementPanel
+        isOpen={showAchievements}
+        onClose={() => setShowAchievements(false)}
+        unlocked={unlocked}
+        stats={stats}
+        getProgress={getAchievementProgress}
+      />
+
+      {newlyUnlocked && newlyUnlocked.length > 0 && (
+        <AchievementToast
+          achievements={newlyUnlocked}
+          onDismiss={clearNewlyUnlocked}
+        />
+      )}
     </div>
   );
 }

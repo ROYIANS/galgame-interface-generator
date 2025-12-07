@@ -4,7 +4,8 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,15 +13,31 @@
 }
 
 .modal {
-    background: #f0e8dc;
+    background: rgba(253, 246, 227, 0.98);
+    border: 4px solid #5c4d3c;
     border-radius: 8px;
     width: 90%;
     max-width: 900px;
     max-height: 80vh;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    box-shadow:
+        0 0 0 2px #dcd3b6,
+        0 10px 40px rgba(0, 0, 0, 0.2);
     font-family: 'DotGothic16', sans-serif;
+    animation: zoomIn 0.2s;
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 .header {
@@ -29,17 +46,21 @@
     align-items: center;
     padding: 20px;
     border-bottom: 2px solid #5c4d3c;
+    background: linear-gradient(to right, rgba(199, 160, 96, 0.1), rgba(253, 246, 227, 0));
 }
 
 .header h2 {
     margin: 0;
-    color: #2c1d0c;
+    color: #5c4d3c;
     font-size: 1.5rem;
+    gap: 10px;
+    display: flex;
+    align-items: center;
 }
 
 .closeBtn {
     background: transparent;
-    border: none;
+    border: 2px solid #5c4d3c;
     cursor: pointer;
     color: #5c4d3c;
     display: flex;
@@ -47,16 +68,19 @@
     justify-content: center;
     transition: all 0.2s;
     padding: 5px;
+    border-radius: 4px;
 }
 
 .closeBtn:hover {
-    color: #2c1d0c;
-    transform: scale(1.1);
+    color: white;
+    background: #e74c3c;
+    border-color: #e74c3c;
+    transform: rotate(90deg);
 }
 
 .privacyNotice {
     background: #e8f4f8;
-    border-bottom: 2px solid #4a90a4;
+    border-bottom: 2px solid #90cdf4;
     padding: 10px 20px;
     display: flex;
     align-items: center;
@@ -65,14 +89,14 @@
 }
 
 .privacyNotice svg {
-    color: #2c5f6f;
+    color: #3182ce;
     flex-shrink: 0;
 }
 
 .privacyNotice p {
     margin: 0;
     font-size: 0.75rem;
-    color: #2c5f6f;
+    color: #2c5282;
     font-weight: bold;
 }
 
@@ -80,6 +104,22 @@
     padding: 20px;
     overflow-y: auto;
     flex: 1;
+    /* Custom Scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: #c7a060 #f0e6d2;
+}
+
+.content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.content::-webkit-scrollbar-track {
+    background: #f0e6d2;
+}
+
+.content::-webkit-scrollbar-thumb {
+    background: #c7a060;
+    border-radius: 4px;
 }
 
 .empty {
@@ -88,7 +128,11 @@
     align-items: center;
     justify-content: center;
     height: 200px;
-    color: #5c4d3c;
+    color: #8b7d6b;
+    border: 2px dashed #dcd3b6;
+    border-radius: 8px;
+    margin: 20px;
+    background: rgba(255, 255, 255, 0.4);
 }
 
 .empty p {
@@ -97,7 +141,9 @@
 
 .hint {
     font-size: 0.9rem;
-    opacity: 0.7;
+    color: #c7a060;
+    opacity: 1;
+    font-weight: bold;
 }
 
 .grid {
@@ -107,27 +153,35 @@
 }
 
 .item {
-    background: white;
-    border-radius: 8px;
+    background: #fff;
+    border: 1px solid #dcd3b6;
+    border-radius: 4px;
+    /* Polaroid like */
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    padding: 10px 10px 0 10px;
+    /* Padding for polaroid effect */
 }
 
 .item:hover {
     transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    border-color: #c7a060;
+    z-index: 5;
 }
 
 .thumbnail {
     width: 100%;
-    height: 150px;
+    height: 180px;
     object-fit: cover;
     display: block;
+    border: 1px solid #eee;
 }
 
 .itemInfo {
-    padding: 10px;
+    padding: 15px 5px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -135,7 +189,8 @@
 
 .timestamp {
     font-size: 0.75rem;
-    color: #5c4d3c;
+    color: #8b7d6b;
+    font-family: 'Courier New', monospace;
 }
 
 .actions {
@@ -145,7 +200,7 @@
 
 .actionBtn {
     background: transparent;
-    border: 1px solid #5c4d3c;
+    border: 1px solid #dcd3b6;
     color: #5c4d3c;
     cursor: pointer;
     padding: 6px;
@@ -158,7 +213,15 @@
 }
 
 .actionBtn:hover {
-    background: #5c4d3c;
+    background: #c7a060;
     color: white;
+    border-color: #c7a060;
     transform: scale(1.05);
+}
+
+/* Delete button specific hover */
+.actionBtn[title="Delete"]:hover {
+    background: #e74c3c;
+    border-color: #e74c3c;
+    color: white;
 }

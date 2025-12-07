@@ -1,0 +1,221 @@
+.container {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.toggleButton {
+  width: 100%;
+  padding: 12px 20px;
+  background: linear-gradient(to right, rgba(253, 246, 227, 0.9), rgba(253, 246, 227, 0.6));
+  border: 2px solid #5c4d3c;
+  border-radius: 8px;
+  color: #5c4d3c;
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 0 rgba(92, 77, 60, 0.2);
+}
+
+.toggleButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 rgba(92, 77, 60, 0.3);
+  background: #fff;
+  border-color: #c7a060;
+  color: #8b4513;
+}
+
+.toggleButton:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 rgba(92, 77, 60, 0);
+}
+
+.headerTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.characterGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+  padding: 15px;
+  background: rgba(253, 246, 227, 0.5);
+  border: 2px dashed #dcd3b6;
+  border-radius: 8px;
+  max-height: 250px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #c7a060 #f0e6d2;
+}
+
+.characterGrid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.characterGrid::-webkit-scrollbar-track {
+  background: #f0e6d2;
+  border-radius: 4px;
+}
+
+.characterGrid::-webkit-scrollbar-thumb {
+  background: #c7a060;
+  border-radius: 4px;
+}
+
+.characterCard {
+  position: relative;
+  background: #fff;
+  border: 2px solid #5c4d3c;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.characterCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.15);
+  border-color: #c7a060;
+  z-index: 10;
+}
+
+.cardContent {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #dcd3b6;
+  background: #f0e6d2;
+  transition: all 0.2s;
+}
+
+.characterCard:hover .avatar {
+  border-color: #c7a060;
+}
+
+.characterName {
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: #5c4d3c;
+  text-align: center;
+  word-break: break-word;
+  background: rgba(253, 246, 227, 0.5);
+  padding: 2px 8px;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.usageCount {
+  font-size: 0.75rem;
+  color: #a08c70;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+}
+
+.deleteConfirm {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(253, 246, 227, 0.98);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 5px;
+  z-index: 20;
+  animation: fadeIn 0.2s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.deleteBtn {
+  padding: 6px 12px;
+  background: #e74c3c;
+  color: white;
+  border: 1px solid #c0392b;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 0.85rem;
+  width: 80%;
+}
+
+.deleteBtn:hover {
+  background: #c0392b;
+}
+
+.cancelBtn {
+  padding: 6px 12px;
+  background: #95a5a6;
+  color: white;
+  border: 1px solid #7f8c8d;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 0.85rem;
+  width: 80%;
+}
+
+.cancelBtn:hover {
+  background: #7f8c8d;
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  .characterGrid {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 10px;
+    max-height: 200px;
+  }
+
+  .characterCard {
+    padding: 8px;
+    min-height: 100px;
+  }
+
+  .avatar {
+    width: 45px;
+    height: 45px;
+  }
+
+  .characterName {
+    font-size: 0.85rem;
+  }
+
+  .usageCount {
+    font-size: 0.7rem;
+  }
+}

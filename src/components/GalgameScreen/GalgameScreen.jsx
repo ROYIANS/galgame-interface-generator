@@ -16,7 +16,8 @@ const GalgameScreen = forwardRef(({
     onShowLog,
     onLoadImage,
     onToggleMute,
-    isMuted
+    isMuted,
+    onShowAchievements
 }, ref) => {
     // 视差效果状态
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -64,6 +65,7 @@ const GalgameScreen = forwardRef(({
                 onLoadImage={onLoadImage}
                 onToggleMute={onToggleMute}
                 isMuted={isMuted}
+                onShowAchievements={onShowAchievements}
             />
         </div>
     );

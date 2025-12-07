@@ -8,12 +8,13 @@ import {
     Settings,
     Edit,
     Volume2,
-    VolumeX
+    VolumeX,
+    Trophy
 } from 'lucide-react';
 import { useUISound } from '../../hooks/useUISound';
 import styles from './ActionBar.module.css';
 
-const ActionBar = ({ onConfig, onEdit, onCapture, onReplay, onToggleCRT, onShowLog, onLoadImage, onToggleMute, isMuted }) => {
+const ActionBar = ({ onConfig, onEdit, onCapture, onReplay, onToggleCRT, onShowLog, onLoadImage, onToggleMute, isMuted, onShowAchievements }) => {
     const iconSize = 18;
     const { playHoverSound } = useUISound();
 
@@ -75,6 +76,18 @@ const ActionBar = ({ onConfig, onEdit, onCapture, onReplay, onToggleCRT, onShowL
                 </span>
                 <span className={styles.label}>{isMuted ? 'UNMUTE' : 'MUTE'}</span>
             </button>
+
+            {onShowAchievements && (
+                <button
+                    className={`${styles.actionBtn} ${styles.achievementBtn}`}
+                    onClick={onShowAchievements}
+                    onMouseEnter={playHoverSound}
+                    title="View achievements"
+                >
+                    <span className={styles.icon}><Trophy size={iconSize} /></span>
+                    <span className={styles.label}>ACHIEVEMENTS</span>
+                </button>
+            )}
         </div>
     );
 };
